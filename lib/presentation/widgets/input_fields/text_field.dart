@@ -1,4 +1,5 @@
-import 'package:firebase_auth_demo/presentation/utils.dart';
+import 'package:firebase_auth_demo/data/constants/colors.dart';
+import 'package:firebase_auth_demo/presentation/utils/utils.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
@@ -14,11 +15,13 @@ class CustomTextInputField extends StatefulWidget {
       this.hintText,
       this.initialValue = '',
       this.validator,
+      this.obscureText = false,
       this.maxLength,
       this.textInputAction = TextInputAction.next,
       this.isNumberField = false})
       : super(key: key);
   final String label;
+  final bool obscureText;
   final bool isRequired;
   final String? hintText;
   final String? Function(String?)? validator;
@@ -56,77 +59,65 @@ class _CustomTextInputFieldState extends State<CustomTextInputField> {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      mainAxisSize: MainAxisSize.min,
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        RichText(
-          text: TextSpan(
-            children: <TextSpan>[
-              TextSpan(
-                  text: widget.label,
-                  style: const TextStyle(
-                      color: Color(0xff727272),
-                      fontWeight: FontWeight.w700,
-                      fontSize: 14)),
-              if (widget.isRequired)
-                const TextSpan(text: "*", style: TextStyle(color: Colors.red))
-            ],
+    return TextFormField(
+      enabled: widget.isEnabled,
+      controller: _textEditingController,
+      onChanged: widget.onChanged,
+      obscureText: widget.obscureText,
+      style: !widget.isEnabled
+          ? const TextStyle(
+              color: Color(0xffC8C8C8),
+              fontSize: 14,
+              fontWeight: FontWeight.w400)
+          : null,
+      onSaved: (s) {
+        if (widget.onChanged != null) widget.onChanged!(s ?? '');
+      },
+      validator: (s) {
+        if (widget.isRequired && (s != null && s.isEmpty)) {
+          return "Required Field";
+        }
+        if (widget.validator != null && s != null && s.isNotEmpty) {
+          print(s);
+          return widget.validator!(s);
+        }
+        return null;
+      },
+      maxLength: widget.maxLength,
+      inputFormatters: widget.isNumberField
+          ? [
+              FilteringTextInputFormatter.allow(RegExp(r'[0-9]')),
+            ]
+          : [],
+      keyboardType: widget.isNumberField ? TextInputType.number : null,
+      textInputAction: widget.textInputAction,
+      decoration: InputDecoration(
+        hintText: widget.hintText ??
+            (widget.isRequired ? widget.label + ' *' : widget.label),
+        hintStyle: Theme.of(context)
+            .textTheme
+            .bodyMedium!
+            .copyWith(color: AppColors.secondaryText),
+        suffixIcon: widget.isLocationField
+            ? const Icon(Icons.location_pin, color: AppColors.borderColor)
+            : sized(w: 10),
+        enabledBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(40),
+          borderSide: const BorderSide(
+            color: AppColors.borderColor,
           ),
         ),
-        sized(
-          h: 8,
+        border: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(40),
+          borderSide: const BorderSide(
+            color: AppColors.borderColor,
+          ),
         ),
-        TextFormField(
-          enabled: widget.isEnabled,
-          controller: _textEditingController,
-          // onChanged: widget.onChanged,
-          style: !widget.isEnabled
-              ? const TextStyle(
-                  color: Color(0xffC8C8C8),
-                  fontSize: 14,
-                  fontWeight: FontWeight.w400)
-              : null,
-          onSaved: (s) {
-            if (widget.onChanged != null) widget.onChanged!(s ?? '');
-          },
-          validator: (s) {
-            if (widget.isRequired && (s != null && s.isEmpty)) {
-              return "Required Field";
-            }
-            if (widget.validator != null && s != null && s.isNotEmpty) {
-              return widget.validator!(s);
-            }
-            return null;
-          },
-          maxLength: widget.maxLength,
-          inputFormatters: widget.isNumberField
-              ? [
-                  FilteringTextInputFormatter.allow(RegExp(r'[0-9]')),
-                ]
-              : [],
-
-          keyboardType: widget.isNumberField ? TextInputType.number : null,
-          textInputAction: widget.textInputAction,
-          decoration: InputDecoration(
-              hintText: widget.hintText,
-              suffixIcon: widget.isLocationField
-                  ? const Icon(Icons.location_pin, color: Color(0xff5E5E5E))
-                  : null,
-              enabledBorder: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(4),
-                borderSide: const BorderSide(
-                  color: Color(0xffDEDEDE),
-                ),
-              ),
-              border: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(4),
-                borderSide: const BorderSide(
-                  color: Color(0xffDEDEDE),
-                ),
-              )),
-        )
-      ],
+        contentPadding: const EdgeInsets.symmetric(
+          horizontal: 24,
+          vertical: 8,
+        ),
+      ),
     );
   }
 }

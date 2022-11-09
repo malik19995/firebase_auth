@@ -1,10 +1,14 @@
+import 'package:flutter/material.dart';
+
+import 'colors.dart';
+
 class Constants {
   static const termsAccept =
       'I have read the Terms of Use and Privacy Policy and I want to proceed.';
 
   static const signupPageTitle = 'Let\'s begin';
 
-  static const alreadyAUser = 'Already have an account?';
+  static const alreadyAUser = 'Already have a profile? ';
 
   static const login = 'Login';
   static const logIn = 'Log in';
@@ -22,3 +26,8 @@ class Constants {
   static const continuee = 'Continue';
   static const cancel = 'Cancel';
 }
+
+const logoutIcon = Icon(
+  Icons.logout,
+  color: AppColors.primaryColor,
+);
