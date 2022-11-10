@@ -1,6 +1,7 @@
 import 'package:firebase_auth_demo/domain/cubits/authentication_cubit.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_statusbarcolor_ns/flutter_statusbarcolor_ns.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 
 import 'screens/dashboard.dart';
@@ -18,9 +19,15 @@ class AuthConsumer extends StatefulWidget {
 }
 
 class _AuthConsumerState extends State<AuthConsumer> {
+  Widget loadingScaffold = const Scaffold(
+    body: Center(
+      child: CircularProgressIndicator(),
+    ),
+  );
   @override
   Widget build(BuildContext context) {
     SizeConfig().init(context);
+    setStatusBarColors();
     return BlocConsumer<AuthenticationCubit, AuthenticationState>(
       bloc: context.read<AuthenticationCubit>(),
       buildWhen: (previous, current) {
@@ -31,16 +38,12 @@ class _AuthConsumerState extends State<AuthConsumer> {
         return state.maybeWhen(
           unauthenticated: () => const LoginForm(),
           unknown: () {
-            return const Center(
-              child: CircularProgressIndicator(),
-            );
+            return loadingScaffold;
           },
           loggedIn: (currentUser) {
             return const Dashboard();
           },
-          orElse: () => const Center(
-            child: CircularProgressIndicator(),
-          ),
+          orElse: () => loadingScaffold,
         );
       },
       listener: (context, state) {

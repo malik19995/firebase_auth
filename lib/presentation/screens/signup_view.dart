@@ -63,9 +63,11 @@ class _SignupFormState extends State<SignupForm> with ValidationsMixin {
                             isRequired: true,
                             validator: (p0) => ValidationsMixin.isNameValid(p0),
                             onChanged: (s) {
-                              setState(() {
-                                name = s;
-                              });
+                              if (mounted) {
+                                setState(() {
+                                  name = s;
+                                });
+                              }
                             },
                           ),
                           sized(h: 16),
@@ -82,9 +84,11 @@ class _SignupFormState extends State<SignupForm> with ValidationsMixin {
                               );
                             }),
                             onChanged: (p0) {
-                              setState(() {
-                                year = p0 as int;
-                              });
+                              if (mounted) {
+                                setState(() {
+                                  year = p0 as int;
+                                });
+                              }
                             },
                           ),
                           sized(h: 16),
@@ -103,9 +107,11 @@ class _SignupFormState extends State<SignupForm> with ValidationsMixin {
                               ),
                             ],
                             onChanged: (p0) {
-                              setState(() {
-                                gender = p0 as String;
-                              });
+                              if (mounted) {
+                                setState(() {
+                                  gender = p0 as String;
+                                });
+                              }
                             },
                           ),
                           sized(h: 16),
@@ -115,9 +121,11 @@ class _SignupFormState extends State<SignupForm> with ValidationsMixin {
                             validator: (p0) =>
                                 ValidationsMixin.isEmailValid(p0),
                             onChanged: (s) {
-                              setState(() {
-                                email = s;
-                              });
+                              if (mounted) {
+                                setState(() {
+                                  email = s;
+                                });
+                              }
                             },
                           ),
                           sized(h: 16),
@@ -128,9 +136,11 @@ class _SignupFormState extends State<SignupForm> with ValidationsMixin {
                             validator: (s) =>
                                 ValidationsMixin.isPasswordValid(s),
                             onChanged: (s) {
-                              setState(() {
-                                password = s;
-                              });
+                              if (mounted) {
+                                setState(() {
+                                  password = s;
+                                });
+                              }
                             },
                           ),
                           sized(h: 16),
@@ -141,9 +151,11 @@ class _SignupFormState extends State<SignupForm> with ValidationsMixin {
                             validator: (s) =>
                                 ValidationsMixin.iscPasswordValid(password, s),
                             onChanged: (s) {
-                              setState(() {
-                                cPassword = s;
-                              });
+                              if (mounted) {
+                                setState(() {
+                                  cPassword = s;
+                                });
+                              }
                             },
                           ),
                           sized(h: 16),
@@ -152,9 +164,11 @@ class _SignupFormState extends State<SignupForm> with ValidationsMixin {
                               CustomCheckbox(
                                 size: 30,
                                 onChanged: (v) {
-                                  setState(() {
-                                    termsAccepted = v;
-                                  });
+                                  if (mounted) {
+                                    setState(() {
+                                      termsAccepted = v;
+                                    });
+                                  }
                                 },
                                 value: termsAccepted,
                                 activeBgColor: AppColors.primaryColor,
@@ -187,16 +201,19 @@ class _SignupFormState extends State<SignupForm> with ValidationsMixin {
                                         name!, email!, gender!, password!, year)
                                     .catchError((err, s) {
                                   loadingNotifier.value = false;
-                                  Fluttertoast.showToast(msg: err);
+                                  Fluttertoast.showToast(
+                                      msg: handleException(err));
                                 }).then((value) {
                                   loadingNotifier.value = false;
 
                                   navigateBack(context);
                                 });
                               } else {
-                                setState(() {
-                                  errorText = 'This is required.';
-                                });
+                                if (mounted) {
+                                  setState(() {
+                                    errorText = 'This is required.';
+                                  });
+                                }
                                 return;
                               }
                             },

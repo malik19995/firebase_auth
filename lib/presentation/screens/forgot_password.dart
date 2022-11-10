@@ -70,10 +70,7 @@ class _ForgotFormState extends State<ForgotForm> {
                         if (value) {
                           Fluttertoast.showToast(
                               msg: 'Reset Email sent successfully');
-                        } else {
-                          Fluttertoast.showToast(
-                              msg: 'Error in sending Reset Email');
-                        }
+                        } else {}
                       });
                     }
                   },

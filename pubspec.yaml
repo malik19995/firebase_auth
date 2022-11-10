@@ -17,7 +17,8 @@ dependencies:
   flutter:
     sdk: flutter
   flutter_bloc: ^8.1.1
-  flutter_hooks: ^0.18.5+1
+  # flutter_hooks: ^0.18.5+1
+  flutter_statusbarcolor_ns: ^0.5.0
   fluttertoast: ^8.1.1
   freezed_annotation: ^2.2.0
   logger: ^1.1.0

@@ -42,7 +42,6 @@ class AuthenticationCubit extends Cubit<AuthenticationState> {
   }
 
   Future<void> login(String email, String password) async {
-    logger.e('Loggin in user----------------------------------------');
     Either<UserCredential, CustomException?> userCred =
         await _authenticator.login(email, password);
 
@@ -56,20 +55,17 @@ class AuthenticationCubit extends Cubit<AuthenticationState> {
     }, (r) {
       logger.e(r);
       if (r == null) {
-        emit(AuthenticationState.error(
-          CustomException(
-              code: '201',
-              error: Exception('Error Signing up User'),
-              stack: StackTrace.fromString('')),
-        ));
+        throw CustomException(
+            code: '201',
+            error: Exception('Error Signing up User'),
+            stack: StackTrace.fromString(''));
       }
-      emit(AuthenticationState.error(r!));
+      throw r;
     });
   }
 
   Future<void> signup(String name, String email, String gender, String password,
       int yearOfBirth) async {
-    emit(const AuthenticationState.loading());
     Either<UserCredential, CustomException?> userCred =
         await _authenticator.signUp(email, password);
 
@@ -87,14 +83,12 @@ class AuthenticationCubit extends Cubit<AuthenticationState> {
       }
     }, (r) {
       if (r == null) {
-        emit(AuthenticationState.error(
-          CustomException(
-              code: '201',
-              error: Exception('Error Signing up User'),
-              stack: StackTrace.fromString('')),
-        ));
+        throw CustomException(
+            code: '201',
+            error: Exception('Error Signing up User'),
+            stack: StackTrace.fromString(''));
       }
-      emit(AuthenticationState.error(r!));
+      throw (r);
     });
   }
 }

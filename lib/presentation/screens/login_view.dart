@@ -2,6 +2,7 @@ import 'package:firebase_auth_demo/data/constants/colors.dart';
 import 'package:firebase_auth_demo/data/constants/constants.dart';
 import 'package:firebase_auth_demo/data/mixins/validation_mixin.dart';
 import 'package:firebase_auth_demo/data/navigator/navigator.dart';
+import 'package:firebase_auth_demo/data/repository/authenticator.dart';
 import 'package:firebase_auth_demo/domain/cubits/authentication_cubit.dart';
 import 'package:firebase_auth_demo/presentation/screens/forgot_password.dart';
 import 'package:firebase_auth_demo/presentation/screens/signup_view.dart';
@@ -89,10 +90,13 @@ class _LoginFormState extends State<LoginForm> {
                                   .then((value) {
                                 loadingNotifier.value = false;
                               }).catchError((err, s) {
+                                CustomException ex = err;
                                 loadingNotifier.value = false;
-                                logger.e(err);
+                                logger.e(ex.error.toString());
                                 logger.e(s);
-                                Fluttertoast.showToast(msg: err);
+                                Fluttertoast.showToast(
+                                  msg: handleException(err),
+                                );
                               });
                             } else {
                               Fluttertoast.showToast(msg: 'Invalid form');
@@ -101,7 +105,10 @@ class _LoginFormState extends State<LoginForm> {
                           label: Constants.letsgo),
                       ClickableText(
                         onPressed: () {
-                          navigateTo(context, const ForgotForm());
+                          navigateTo(
+                            context,
+                            const ForgotForm(),
+                          );
                         },
                         text: Constants.forgotPassword,
                         foregroundColor: AppColors.secondaryText,
@@ -113,10 +120,11 @@ class _LoginFormState extends State<LoginForm> {
                         foregroundColor: AppColors.primaryColor,
                       ),
                       CustomButton(
-                          onPressed: () {
-                            navigateTo(context, const SignupForm());
-                          },
-                          label: Constants.register),
+                        onPressed: () {
+                          navigateTo(context, const SignupForm());
+                        },
+                        label: Constants.register,
+                      ),
                       spacer(),
                     ],
                   ),
