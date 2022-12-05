@@ -15,6 +15,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:modal_progress_hud_nsn/modal_progress_hud_nsn.dart';
+import 'package:sign_in_with_apple/sign_in_with_apple.dart';
 
 class LoginForm extends StatefulWidget {
   const LoginForm({super.key});
@@ -124,6 +125,23 @@ class _LoginFormState extends State<LoginForm> {
                           navigateTo(context, const SignupForm());
                         },
                         label: Constants.register,
+                      ),
+                      sized(h: 15),
+                      SignInWithAppleButton(
+                        onPressed: () async {
+                          final credential =
+                              await SignInWithApple.getAppleIDCredential(
+                            scopes: [
+                              AppleIDAuthorizationScopes.email,
+                              AppleIDAuthorizationScopes.fullName,
+                            ],
+                          );
+
+                          print(credential);
+
+                          // Now send the credential (especially `credential.authorizationCode`) to your server to create a session
+                          // after they have been validated with Apple (see `Integration` section for more information on how to do this)
+                        },
                       ),
                       spacer(),
                     ],
